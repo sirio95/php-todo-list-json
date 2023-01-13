@@ -1,40 +1,66 @@
-<script setup>
-import { ref } from 'vue'
+<script>
+  import axios from 'axios';
 
-defineProps({
-  msg: String,
-})
+  
+  export default{
+    data(){
+        return{
+          new_todo_text : "",
+          to_do_list: [],
+          api_URL : "http://localhost/",
+        }
+    },
+    methods: {
+      
+      get_all_data(){
+        axios.get(this.api_URL + "api.php").then(res =>{
+          const data= res.data;
+          this.to_do_list= data;
+        })
+      },
 
-const count = ref(0)
+      create_new_task(e){
+        e.preventDefault();
+
+        const params = {
+          params: {
+            "new_to_do" : this.new_todo_text
+          }
+        }
+        axios.get(this.api_URL + "api_new_todo.php", params).then(()=>{
+          this.get_all_data();
+        })
+      }
+    },
+    mounted(){
+      this.get_all_data();
+    }
+
+  }
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <form @submit="create_new_task">
+    <label for="new_todo_text">Nome del task</label>
+    <input type="text" name="new_todo_text" v-model="new_todo_text">
+    <input type="submit" value="Crea un nuovo task">
+  </form>
 
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
-  </div>
+  <section>
+    <ul>
+      <li v-for="(to_do, index) in to_do_list" :key="index" 
+        class= "task" :class="to_do.completed">
+          {{ to_do.text }}
+          
+      </li>
+    </ul>
+  </section>
 
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
+  
 
 <style scoped>
-.read-the-docs {
-  color: #888;
-}
+  .task{
+    color: #fff;
+  }
 </style>
