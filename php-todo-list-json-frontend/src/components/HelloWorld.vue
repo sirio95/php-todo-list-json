@@ -50,7 +50,11 @@
     <ul>
       <li v-for="(to_do, index) in to_do_list" :key="index" 
         class= "task" :class="to_do.completed">
-          {{ to_do.text }}
+        <div>
+          <s v-if="to_do_list.completed"> {{ to_do.text }} </s>
+          <span v-else> {{ to_do.text }} </span>
+        </div>
+          
           
       </li>
     </ul>
