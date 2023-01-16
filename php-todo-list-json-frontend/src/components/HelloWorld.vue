@@ -50,7 +50,7 @@
     <ul>
       <li v-for="(to_do, index) in to_do_list" :key="index" 
         class= "task" :class="to_do.completed">
-        <div>
+        <div class="pointer">
           <s v-if="to_do_list.completed"> {{ to_do.text }} </s>
           <span v-else> {{ to_do.text }} </span>
         </div>
@@ -67,4 +67,14 @@
   .task{
     color: #fff;
   }
+  .pointer{
+    cursor: pointer;
+  }
+  .pointer s{
+    color: red;
+  }
+  .pointer span{
+    color: green;
+  }
+
 </style>
